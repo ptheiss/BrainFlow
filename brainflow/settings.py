@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-v#azw-s3g!cs#9iv+d95ga4-%bt=tvu**1)7x1arliqui$b^hv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://brainflow.ddev.site/"]
 
 
 # Application definition

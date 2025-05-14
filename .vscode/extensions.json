@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "vitest.explorer",
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode",
+    "james-yu.latex-workshop",
+    "formulahendry.auto-close-tag",
+    "alefragnani.bookmarks"
+  ]
+}
