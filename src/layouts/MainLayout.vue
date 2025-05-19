@@ -1,41 +1,70 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <!-- Toolbar -->
+  <q-layout view="hHh lpR fFf">
+    <q-header>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-toolbar-title> BrainFlow </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <!-- Sidebar -->
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="sidebar">
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+        <!-- Sidebar Account -->
+        <q-expansion-item class="account">
+          <template v-slot:header>
+            <q-item-section avatar>
+              <q-avatar rounded size="48px" color="primary">P</q-avatar>
+            </q-item-section>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+            <q-item-section>
+              <q-item-label>philipp.theiss@aisys-media.de</q-item-label>
+            </q-item-section>
+          </template>
+
+          <q-btn-group spread outline>
+            <q-btn flat color="primary" icon="manage_accounts">Profile</q-btn>
+            <q-btn flat color="primary" icon="settings">Settings</q-btn>
+            <q-btn flat color="negative" icon="logout" to="/">Logout</q-btn>
+          </q-btn-group>
+        </q-expansion-item>
+
+        <q-separator />
+
+        <!-- Sidebar Tabs -->
+        <q-tabs v-model="tab" class="primary" inline-label>
+          <q-tab name="recent" icon="schedule" label="" />
+          <q-tab name="favourites" icon="star_outline" label="" />
+          <q-tab name="search" icon="search" label="" />
+        </q-tabs>
+
+        <q-tab-panels v-model="tab" animated>
+          <q-tab-panel name="recent">
+            <div class="text-h6">Recent</div>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </q-tab-panel>
+
+          <q-tab-panel name="favourites">
+            <div class="text-h6">Favourites</div>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </q-tab-panel>
+
+          <q-tab-panel name="search">
+            <div class="text-h6">Search</div>
+            <!-- Sidebar Tags -->
+            <q-input outlined bottom-slots v-model="text" label="Search tags">
+              <template v-slot:prepend>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+          </q-tab-panel>
+        </q-tab-panels>
+
+        <!--<EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />-->
       </q-list>
     </q-drawer>
 
@@ -47,56 +76,25 @@
 
 <script setup>
 import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
 
 const leftDrawerOpen = ref(false)
+const tab = ref('recent')
 
-function toggleLeftDrawer () {
+function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
+
+<style>
+.sidebar {
+  padding: 10px;
+}
+
+.sidebar hr {
+  margin: 10px;
+}
+
+.account {
+  margin-bottom: 10px;
+}
+</style>

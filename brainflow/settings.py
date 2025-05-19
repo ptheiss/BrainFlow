@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-v#azw-s3g!cs#9iv+d95ga4-%bt=tvu**1)7x1arliqui$b^hv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://brainflow.ddev.site/"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -37,7 +37,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+    'corsheaders',
+    'rest_framework_simplejwt',
+    'api',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://localhost:9000',
+    'http://localhost',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
