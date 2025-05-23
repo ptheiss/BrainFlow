@@ -3,7 +3,7 @@
   <q-layout view="hHh lpR fFf">
     <q-header>
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn flat dense icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> BrainFlow </q-toolbar-title>
 
