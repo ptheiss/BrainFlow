@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,18 +40,37 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
-    'rest_framework_simplejwt',
     'api',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
+
+if not os.environ.get('WSGI_APPLICATION'):
+    # Allow all origins (not recommended for production)
+    CORS_ALLOW_CREDENTIALS = True
+
+    # Or allow specific origins
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:8080",
+    ]
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:8080",
+    ]
+
+CSRF_COOKIE_NAME = "csrftoken"
+
+# 20 minutes in seconds
+SESSION_COOKIE_AGE = 1200
+
+# Resets the cookie are after each request
+SESSION_SAVE_EVERY_REQUEST = True
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
@@ -62,6 +81,7 @@ CORS_ORIGIN_WHITELIST = (
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

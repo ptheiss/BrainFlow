@@ -22,7 +22,7 @@
             </q-item-section>
 
             <q-item-section>
-              <q-item-label>philipp.theiss@aisys-media.de</q-item-label>
+              <q-item-label>{{ users.getUsername }}</q-item-label>
             </q-item-section>
           </template>
 
@@ -37,9 +37,9 @@
 
         <!-- Sidebar Tabs -->
         <q-tabs v-model="tab" class="primary" inline-label>
-          <q-tab name="recent" icon="schedule" label="" />
+          <q-tab name="tags" icon="bookmark_border" label="" />
           <q-tab name="favourites" icon="star_outline" label="" />
-          <q-tab name="search" icon="search" label="" />
+          <q-tab name="recent" icon="schedule" label="" />
         </q-tabs>
 
         <q-tab-panels v-model="tab" animated>
@@ -53,14 +53,29 @@
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </q-tab-panel>
 
-          <q-tab-panel name="search">
-            <div class="text-h6">Search</div>
-            <!-- Sidebar Tags -->
-            <q-input outlined bottom-slots v-model="text" label="Search tags">
+          <q-tab-panel name="tags">
+            <div class="text-h6">Tags</div>
+
+            <!-- Tag Search Element -->
+            <q-input outlined bottom-slots v-model="search" label="Search tags">
               <template v-slot:prepend>
                 <q-icon name="search" />
               </template>
             </q-input>
+
+            <q-list separator class="noteList">
+              <q-item v-for="tag in tags" :key="tag.id" clickable>
+                <q-item-section>
+                  <q-item-label>{{ tag.title }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side>
+                  <div class="q-gutter-m text-dark">
+                    <q-btn flat dense icon="star_outline" label="" />
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
           </q-tab-panel>
         </q-tab-panels>
 
@@ -76,9 +91,21 @@
 
 <script setup>
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUsersStore } from 'src/stores/usersStore'
+//import { useSettingsStore } from 'src/stores/settingsStore'
+import { useTagsStore } from 'src/stores/tagsStore'
+
+const users = useUsersStore()
+//const settings = useSettingsStore()
+const tagStore = useTagsStore()
+const tags = tagStore.getTags
+const tagRefs = storeToRefs(tagStore)
+
+const tab = tagRefs.tab
+const search = tagRefs.search
 
 const leftDrawerOpen = ref(false)
-const tab = ref('recent')
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value

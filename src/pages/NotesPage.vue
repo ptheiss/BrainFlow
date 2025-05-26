@@ -32,12 +32,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useStore } from 'src/stores/store.js'
+import { useNotesStore } from 'src/stores/notesStore'
 import NoteEditor from 'src/components/NoteEditor.vue'
 import DeleteDialog from 'src/components/DeleteDialog.vue'
 
-const store = useStore()
-const notes = store.getNotes
+const notesStore = useNotesStore()
+
+const notes = notesStore.getNotes
 const edit = ref(false)
 const del = ref(false)
 
