@@ -119,6 +119,17 @@ DATABASES = {
     }
 }
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'your_database_name',
+#        'USER': 'your_mysql_username',
+#        'PASSWORD': 'your_mysql_password',
+#        'HOST': 'localhost',  # Set to the MySQL server's host, e.g., 'localhost'
+#        'PORT': '3306',       # Set to the MySQL server's port, if different from the default (3306)
+#    }
+#}
+
 AUTH_USER_MODEL = "api.User"
 
 # Password validation
