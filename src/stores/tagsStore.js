@@ -1,70 +1,70 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
+import { api } from 'src/boot/axios'
+import { useQuasar } from 'quasar'
 
 export const useTagsStore = defineStore('tags', {
   state: () => ({
-    tags: {
-      1: {
-        title: 'Testnotizen',
-        color: '#a2aa33',
-      },
-    },
-    recent: [
-      {
-        tag_id: 1,
-        datetime: '2025-05-26T08:59:52+00:00',
-      },
-    ],
-    favourites: [1],
-    search: '',
-    tab: 'tags',
+    tags: [],
   }),
 
   getters: {
     getTags: (state) => state.tags,
-    getRecent: (state) => state.recent,
-    getFavourites: (state) => state.favourites,
   },
 
   actions: {
     // Create
-    newTag() {
-      console.log('newTag')
+    async newTag(data) {
+      return api
+        .post('/tags/', data)
+        .then((response) => {
+          this.state.tags.push(response.data)
+        })
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'newFavourite Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
-    newRecent() {
-      console.log('newRecent')
-    },
-    newFavourite() {
-      console.log('newFavourite')
-    },
-    newSearch() {
-      console.log('newSearch')
-    },
+
     // Read
-    loadAllTags() {
-      console.log('loadAllTags')
-    },
-    loadTag(id) {
-      console.log('loadTag', id)
-    },
-    loadRecent(id) {
-      console.log('loadRecent', id)
-    },
-    loadFavourites(id) {
-      console.log('loadFavourites', id)
+    async loadTags() {
+      return api
+        .get('/tags/')
+        .then((response) => {
+          this.state.tags.push(response.data)
+        })
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'loadFavourites Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
     // Update
-    saveTag(id) {
-      console.log('saveTag', id)
+    async updateTag(tag) {
+      console.log('saveTag', tag)
     },
     // Delete
-    deleteTag(id) {
-      console.log('deleteTag', id)
-    },
-    deleteRecent(id) {
-      console.log('deleteRecent', id)
-    },
-    deleteFavourite(id) {
-      console.log('deleteTag', id)
+    async deleteTag(tag_id) {
+      const data = {
+        tag_id: tag_id,
+      }
+      return api
+        .delete('/favourites/', data)
+        .then(this.loadFavourites())
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'deleteFavourite Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
   },
 })

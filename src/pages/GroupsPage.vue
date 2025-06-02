@@ -2,7 +2,7 @@
   <q-page class="flex">
     <div class="div">
       <q-toolbar class="bg-grey-3 toolbar">
-        <q-toolbar-title> Notes </q-toolbar-title>
+        <q-toolbar-title> Groups </q-toolbar-title>
         <q-btn flat dense icon="refresh" aria-label="Refresh" />
       </q-toolbar>
 

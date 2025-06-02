@@ -7,7 +7,7 @@ export const useSettingsStore = defineStore('settings', {
       {
         id: 1,
         user_id: 1, // user.id
-        label: 'Dark mode',
+        title: 'Dark mode',
         description: 'Enable dark mode?',
         value: '0',
       },
@@ -20,21 +20,13 @@ export const useSettingsStore = defineStore('settings', {
 
   actions: {
     // Create
-    newSettings() {
-      console.log('newSettings')
-    },
+    newSettings() {},
     // Read
-    loadSettings() {
-      console.log('loadSettings')
-    },
+    loadSettings() {},
     // Update
-    saveSettings() {
-      console.log('saveSettings')
-    },
+    saveSettings() {},
     // Delete
-    deleteSettings() {
-      console.log('deleteSettings')
-    },
+    deleteSettings() {},
   },
 })
 

@@ -15,21 +15,13 @@ export const useEditorStore = defineStore('editor', {
 
   actions: {
     // Create
-    newEditor() {
-      console.log('newEditor')
-    },
+    newEditor() {},
     // Read
-    loadEditor() {
-      console.log('loadEditor')
-    },
+    loadEditor() {},
     // Update
-    saveEditor() {
-      console.log('saveEditor')
-    },
+    saveEditor() {},
     // Delete
-    deleteEditor() {
-      console.log('deleteEditor')
-    },
+    deleteEditor() {},
   },
 })
 

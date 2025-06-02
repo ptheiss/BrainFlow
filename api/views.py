@@ -32,7 +32,3 @@ class NoteViewSet(viewsets.ModelViewSet):
 class SettingViewSet(viewsets.ModelViewSet):
     queryset = Setting.objects.all()
     serializer_class = SettingSerializer
-
-class UserSettingViewSet(viewsets.ModelViewSet):
-    queryset = UserSetting.objects.all().select_related('user_id').select_related('setting_id')
-    serializer_class = UserSettingSerializer

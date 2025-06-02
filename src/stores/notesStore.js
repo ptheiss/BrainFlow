@@ -1,33 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
+import { api } from 'src/boot/axios'
+import { useQuasar } from 'quasar'
 
 export const useNotesStore = defineStore('notes', {
   state: () => ({
-    notes: [
-      {
-        id: 1,
-        title: 'Testnotiz',
-        content: 'Test C:',
-        tags: [1],
-      },
-      {
-        id: 2,
-        title: 'Testnotiz 2',
-        content: 'Test 2 C:',
-        tags: [1],
-      },
-      {
-        id: 3,
-        title: 'Testnotiz 3',
-        content: 'Test 3 C:',
-        tags: [1],
-      },
-      {
-        id: 4,
-        title: 'Testnotiz 4',
-        content: 'Test 4 C:',
-        tags: [1],
-      },
-    ],
+    notes: [],
   }),
 
   getters: {
@@ -36,23 +13,69 @@ export const useNotesStore = defineStore('notes', {
 
   actions: {
     // Create
-    newNote() {
-      console.log('newNote')
+    async newNote(data) {
+      return api
+        .post('/notes/', data)
+        .then((response) => {
+          this.state.tags.push(response.data)
+        })
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'newNote Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
     // Read
-    loadAllNotes() {
-      console.log('loadAllNotes')
-    },
-    loadNote(id) {
-      console.log('loadNote', id)
+    async loadNotes() {
+      return api
+        .get('/notes/')
+        .then((response) => {
+          this.state.tags.push(response.data)
+        })
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'loadNote Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
     // Update
-    saveNote(id) {
-      console.log('saveNote', id)
+    async updateNote(data) {
+      return api
+        .put('/notes/', data)
+        .then((response) => {
+          this.state.tags.push(response.data)
+        })
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'newNote Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
     // Delete
-    deleteNote(id) {
-      console.log('deleteNote', id)
+    async deleteNote(note_id) {
+      const data = {
+        note_id: note_id,
+      }
+      return api
+        .delete('/notes/', data)
+        .then(this.loadFavourites())
+        .catch(() => {
+          useQuasar.notify({
+            color: 'negative',
+            position: 'bottom',
+            message: 'deleteNote Fehler!',
+            icon: 'report_problem',
+          })
+        })
     },
   },
 })

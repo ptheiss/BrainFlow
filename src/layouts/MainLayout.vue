@@ -11,6 +11,10 @@
       </q-toolbar>
     </q-header>
 
+    <q-page-sticky position="bottom-right" class="z-top" :offset="[18, 18]">
+      <q-btn fab icon="add" color="primary" aria-label="New Note" @click="newNote" />
+    </q-page-sticky>
+
     <!-- Sidebar -->
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="sidebar">
       <q-list>
@@ -22,13 +26,13 @@
             </q-item-section>
 
             <q-item-section>
-              <q-item-label>{{ users.getUsername }}</q-item-label>
+              <q-item-label>{{ users.getUser.email }}</q-item-label>
             </q-item-section>
           </template>
 
           <q-btn-group spread outline>
-            <q-btn flat color="primary" icon="manage_accounts">Profile</q-btn>
-            <q-btn flat color="primary" icon="settings">Settings</q-btn>
+            <q-btn flat color="primary" icon="groups" to="/groups">Groups</q-btn>
+            <q-btn flat color="primary" icon="settings" to="/settings">Settings</q-btn>
             <q-btn flat color="negative" icon="logout" to="/">Logout</q-btn>
           </q-btn-group>
         </q-expansion-item>
@@ -43,25 +47,23 @@
         </q-tabs>
 
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="recent">
-            <div class="text-h6">Recent</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-
-          <q-tab-panel name="favourites">
-            <div class="text-h6">Favourites</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-
+          <!-- All Tags -->
           <q-tab-panel name="tags">
             <div class="text-h6">Tags</div>
 
             <!-- Tag Search Element -->
-            <q-input outlined bottom-slots v-model="search" label="Search tags">
-              <template v-slot:prepend>
-                <q-icon name="search" />
-              </template>
-            </q-input>
+            <q-select
+              outlined
+              v-model="selectedTags"
+              use-input
+              hide-selected
+              fill-input
+              multiple
+              stack-label
+              :options="tags"
+              use-chips
+              label="Search tags"
+            />
 
             <q-list separator class="noteList">
               <q-item v-for="tag in tags" :key="tag.id" clickable>
@@ -71,20 +73,55 @@
 
                 <q-item-section side>
                   <div class="q-gutter-m text-dark">
-                    <q-btn flat dense icon="star_outline" label="" />
+                    <q-btn
+                      flat
+                      dense
+                      icon="star_outline"
+                      label=""
+                      @click="users.newFavourite(tag)"
+                    />
                   </div>
                 </q-item-section>
               </q-item>
             </q-list>
           </q-tab-panel>
-        </q-tab-panels>
 
-        <!--<EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />-->
+          <!-- Favourite Tags -->
+          <q-tab-panel name="favourites">
+            <div class="text-h6">Favourites</div>
+            <q-list separator>
+              <q-item v-for="tag in favourites" :key="tag.id" clickable>
+                <q-item-section>
+                  <q-item-label>{{ tag.title }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side>
+                  <div class="q-gutter-m text-dark">
+                    <q-btn flat dense icon="star_outline" label="" @click="deleteFavourite(tag)" />
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-tab-panel>
+
+          <!-- Recent Tags -->
+          <q-tab-panel name="recent">
+            <div class="text-h6">Recent</div>
+            <q-list separator>
+              <q-item v-for="tag in recent" :key="tag.id" clickable>
+                <q-item-section>
+                  <q-item-label>{{ tag.title }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-tab-panel>
+        </q-tab-panels>
       </q-list>
     </q-drawer>
 
     <q-page-container>
       <router-view />
+      <NoteEditor v-model="edit"></NoteEditor>
     </q-page-container>
   </q-layout>
 </template>
@@ -93,22 +130,30 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from 'src/stores/usersStore'
-//import { useSettingsStore } from 'src/stores/settingsStore'
 import { useTagsStore } from 'src/stores/tagsStore'
+import NoteEditor from 'src/components/NoteEditor.vue'
 
 const users = useUsersStore()
 //const settings = useSettingsStore()
 const tagStore = useTagsStore()
 const tags = tagStore.getTags
-const tagRefs = storeToRefs(tagStore)
+const userRefs = storeToRefs(users)
 
-const tab = tagRefs.tab
-const search = tagRefs.search
+const tab = userRefs.tab
+const recent = userRefs.recent
+const favourites = userRefs.favourites
 
+const edit = ref(false)
 const leftDrawerOpen = ref(false)
+const selectedTags = ref([])
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+function newNote() {
+  console.log('newNote')
+  edit.value = true
 }
 </script>
 

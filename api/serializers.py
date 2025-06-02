@@ -5,7 +5,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['id','username', 'first_name', 'last_name', 'EMAIL_FIELD']
+        fields = ['id','username', 'groups', 'settings', 'favourites', 'first_name', 'last_name', 'EMAIL_FIELD']
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -21,8 +21,3 @@ class SettingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
         fields = ['id','title', 'description']
-
-class UserSettingSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = UserSetting
-        fields = ['user_id','setting_id', 'state']
