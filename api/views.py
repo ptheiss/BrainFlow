@@ -7,10 +7,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 
-from rest_framework import generics
-
+from rest_framework import permissions, viewsets, generics
 from api.models import *
-from rest_framework import viewsets
 from api.serializers import *
 
 def index_view(request):
@@ -20,15 +18,14 @@ def index_view(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    #permission_classes = [permissions.IsAuthenticated]
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    #permission_classes = [permissions.IsAuthenticated]
 
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-
-class SettingViewSet(viewsets.ModelViewSet):
-    queryset = Setting.objects.all()
-    serializer_class = SettingSerializer
+    #permission_classes = [permissions.IsAuthenticated]

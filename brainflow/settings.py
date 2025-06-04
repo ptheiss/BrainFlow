@@ -45,10 +45,13 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.IsAdminUser'
     ],
 }
 
@@ -58,10 +61,12 @@ if not os.environ.get('WSGI_APPLICATION'):
 
     # Or allow specific origins
     CORS_ALLOWED_ORIGINS = [
-        "http://localhost:8080",
+        "http://localhost:8000",
+        "http://localhost:9000",
     ]
     CSRF_TRUSTED_ORIGINS = [
-        "http://localhost:8080",
+        "http://localhost:8000",
+        "http://localhost:9000",
     ]
 
 CSRF_COOKIE_NAME = "csrftoken"
@@ -73,7 +78,7 @@ SESSION_COOKIE_AGE = 1200
 SESSION_SAVE_EVERY_REQUEST = True
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
+    'http://localhost:8000',
     'http://localhost:9000',
     'http://localhost',
 )

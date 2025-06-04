@@ -1,18 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 
-# Create your models here.
+# Create your models here
+ 
+class Workgroup(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=128, default="Workgroup")
+    def __str__(self):
+         return self.title
 class Tag(models.Model):
     COLORS = [
-        ('#008000','Green'),
-        ('#FFFFFF','White'),
-        ('#000000','Black'),
+        ('red', 'Red'),
+        ('light-green', 'Green'),
+        ('light-blue', 'Blue'),
+        ('yellow', 'Yellow'),
+        ('purple', 'Purple'),
+        ('orange', 'Orange'),
+        ('white', 'White'),
+        ('grey', 'Grey'),
     ]
 
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=128)
-    color = models.CharField(max_length=7, choices=COLORS)
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+    color = models.CharField(max_length=32, choices=COLORS)
+    group = models.ForeignKey(Workgroup, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
         return self.title
@@ -25,7 +36,6 @@ class Setting(models.Model):
     def __str__(self):
         return self.title
 
-
 class User(AbstractUser):
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=40, unique=True)
@@ -34,6 +44,7 @@ class User(AbstractUser):
     email = models.CharField(max_length=128)
     settings = models.ManyToManyField(Setting, through="UserSetting", blank=True)
     favourites = models.ManyToManyField(Tag, related_name="favourites", blank=True)
+    workgroups = models.ManyToManyField(Workgroup, through="Membership", blank=True)
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['email', 'password']
@@ -45,7 +56,7 @@ class Note(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=128)
     content = models.TextField()
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+    group = models.ForeignKey(Workgroup, on_delete=models.SET_NULL, null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
     lastEdited = models.DateTimeField(blank=True)
     lastEditor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -53,11 +64,6 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
-    
-class Group(Group):
-    users = models.ManyToManyField(User, through="Membership", blank=True)
-    def __str__(self):
-         return self.name
 
 # Through Models
 class UserSetting(models.Model):
@@ -71,5 +77,5 @@ class Membership(models.Model):
         ('developer','Developer')
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Workgroup, on_delete=models.CASCADE)
     role = models.JSONField(choices=ROLES)

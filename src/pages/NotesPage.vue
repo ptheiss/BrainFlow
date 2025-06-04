@@ -19,7 +19,11 @@
           <q-item-section>
             <q-item-label overline>{{ note.title }}</q-item-label>
             <q-item-label lines="1">{{ note.content }}</q-item-label>
-            <q-item-label caption>{{ note.tags }}</q-item-label>
+            <q-item-label caption>
+              <q-chip v-for="tag in note.tags" :key="tag.id" :color="tag.color">
+                {{ tag.title }}
+              </q-chip>
+            </q-item-label>
           </q-item-section>
 
           <q-item-section side>

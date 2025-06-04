@@ -131,11 +131,14 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from 'src/stores/usersStore'
 import { useTagsStore } from 'src/stores/tagsStore'
+import { useNotesStore } from 'src/stores/notesStore'
 import NoteEditor from 'src/components/NoteEditor.vue'
 
 const users = useUsersStore()
-//const settings = useSettingsStore()
 const tagStore = useTagsStore()
+const notesStore = useNotesStore()
+
+notesStore.initialize()
 const tags = tagStore.getTags
 const userRefs = storeToRefs(users)
 

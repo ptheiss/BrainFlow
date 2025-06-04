@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
-import { useQuasar } from 'quasar'
+import { Notify } from 'quasar'
 
 export const useNotesStore = defineStore('notes', {
   state: () => ({
@@ -12,15 +12,23 @@ export const useNotesStore = defineStore('notes', {
   },
 
   actions: {
+    async initialize() {
+      await this.loadNotes()
+    },
     // Create
     async newNote(data) {
       return api
         .post('/notes/', data)
         .then((response) => {
-          this.state.tags.push(response.data)
+          this.notes = []
+
+          console.log(response.data)
+          for (let i = 0; i < response.data.length; i++) {
+            this.notes.push(response.data[i])
+          }
         })
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
             message: 'newNote Fehler!',
@@ -32,16 +40,18 @@ export const useNotesStore = defineStore('notes', {
     async loadNotes() {
       return api
         .get('/notes/')
-        .then((response) => {
-          this.state.tags.push(response.data)
-        })
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
             message: 'loadNote Fehler!',
             icon: 'report_problem',
           })
+        })
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            this.notes.push(response.data[i])
+          }
         })
     },
     // Update
@@ -52,7 +62,7 @@ export const useNotesStore = defineStore('notes', {
           this.state.tags.push(response.data)
         })
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
             message: 'newNote Fehler!',
@@ -69,7 +79,7 @@ export const useNotesStore = defineStore('notes', {
         .delete('/notes/', data)
         .then(this.loadFavourites())
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
             message: 'deleteNote Fehler!',
