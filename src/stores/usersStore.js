@@ -10,11 +10,11 @@ export const useUsersStore = defineStore('usersStore', {
       name: 'ptheiss',
       email: 'philipp.theiss@aisys-media.de',
       password: '123456',
+      groups: {},
+      favourites: [],
     },
-    groups: {},
     // tag-related properties
     selected: [],
-    favourites: [],
     recent: [],
     tab: 'tags',
   }),
@@ -38,7 +38,7 @@ export const useUsersStore = defineStore('usersStore', {
       return api
         .post('/favourites/', data)
         .then((response) => {
-          this.state.favourites.push(response.data)
+          this.favourites.push(response.data)
         })
         .catch(() => {
           useQuasar.notify({

@@ -12,26 +12,16 @@
       <q-select
         outlined
         square
-        v-model="selectedTags"
+        v-model="tags"
         use-input
         hide-selected
         fill-input
         multiple
-        :options="tags"
+        :options="allTags"
         use-chips
         label="Tags"
       />
       <q-editor v-model="content"> </q-editor>
-
-      <q-drawer
-        bordered
-        v-model="drawer"
-        :width="200"
-        :breakpoint="600"
-        class="bg-grey-3 text-dark q-pa-sm"
-      >
-        <div v-for="n in 50" :key="n">Drawer {{ n }} / 50</div>
-      </q-drawer>
 
       <q-toolbar>
         <q-space />
@@ -46,22 +36,25 @@ import { ref } from 'vue'
 import { useNotesStore } from 'src/stores/notesStore'
 import { useTagsStore } from 'src/stores/tagsStore'
 
+const props = defineProps(['title', 'content', 'tags'])
+
 // Stores
 const notesStore = useNotesStore()
 const tagsStore = useTagsStore()
 
 // V-Models / Refs
-const title = ref('')
-const content = ref('')
-const selectedTags = ref([])
-const tags = tagsStore.getTags
-const drawer = ref(false)
+const title = ref(props.title)
+const content = ref(props.content)
+const tags = ref(props.tags)
+const allTags = tagsStore.getTags
 
 // Functions
 function createNote() {
   const newNote = {
-    title: this.title,
-    content: this.content,
+    title: props.title,
+    content: props.content,
+    tags: props.tags,
+    group: props.group,
   }
 
   notesStore.newNote(newNote)

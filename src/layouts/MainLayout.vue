@@ -11,10 +11,6 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-sticky position="bottom-right" class="z-top" :offset="[18, 18]">
-      <q-btn fab icon="add" color="primary" aria-label="New Note" @click="newNote" />
-    </q-page-sticky>
-
     <!-- Sidebar -->
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="sidebar">
       <q-list>
@@ -121,7 +117,6 @@
 
     <q-page-container>
       <router-view />
-      <NoteEditor v-model="edit"></NoteEditor>
     </q-page-container>
   </q-layout>
 </template>
@@ -132,13 +127,15 @@ import { storeToRefs } from 'pinia'
 import { useUsersStore } from 'src/stores/usersStore'
 import { useTagsStore } from 'src/stores/tagsStore'
 import { useNotesStore } from 'src/stores/notesStore'
-import NoteEditor from 'src/components/NoteEditor.vue'
 
 const users = useUsersStore()
 const tagStore = useTagsStore()
 const notesStore = useNotesStore()
 
-notesStore.initialize()
+if (notesStore.getNotes.length == 0) {
+  notesStore.initialize()
+}
+
 const tags = tagStore.getTags
 const userRefs = storeToRefs(users)
 
@@ -146,17 +143,11 @@ const tab = userRefs.tab
 const recent = userRefs.recent
 const favourites = userRefs.favourites
 
-const edit = ref(false)
 const leftDrawerOpen = ref(false)
 const selectedTags = ref([])
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
-}
-
-function newNote() {
-  console.log('newNote')
-  edit.value = true
 }
 </script>
 

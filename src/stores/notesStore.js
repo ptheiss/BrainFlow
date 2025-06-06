@@ -38,6 +38,7 @@ export const useNotesStore = defineStore('notes', {
     },
     // Read
     async loadNotes() {
+      this.notes = []
       return api
         .get('/notes/')
         .catch(() => {
@@ -52,6 +53,8 @@ export const useNotesStore = defineStore('notes', {
           for (let i = 0; i < response.data.length; i++) {
             this.notes.push(response.data[i])
           }
+
+          //console.log('loadNotes concluded ', this.notes)
         })
     },
     // Update
