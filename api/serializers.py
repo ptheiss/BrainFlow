@@ -2,13 +2,14 @@ from api.models import *
 from rest_framework import serializers
 from rest_framework.serializers import Serializer
 from rest_framework.exceptions import ValidationError
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 # Serializers define the API representation.
 class TitleField(serializers.RelatedField):
     def to_representation (self, value):
-        return value.title
+        return value.label
     
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(WritableNestedModelSerializer, serializers.HyperlinkedModelSerializer):
     permissions = serializers.SerializerMethodField()
 
     def get_permissions(self, obj):
@@ -16,17 +17,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     
     group = serializers.SlugRelatedField(
         queryset=Workgroup.objects.all(),
+        allow_null=True,
         slug_field='title'
     )
     settings = serializers.SlugRelatedField(
         many=True,
         queryset=UserSetting.objects.all(),
+        allow_null=True,
         slug_field='title'
     )
     favourites = serializers.SlugRelatedField(
         many=True,
         queryset=Tag.objects.all(),
-        slug_field='title'
+        allow_null=True,
+        slug_field='label'
     )
     class Meta:
         model = User
@@ -42,19 +46,21 @@ class LoginSerializer(Serializer):
             return user
         raise ValidationError({'error': 'Invalid username or password.'})
 
-class TagSerializer(serializers.HyperlinkedModelSerializer):
+class TagSerializer(WritableNestedModelSerializer, serializers.HyperlinkedModelSerializer):
     group = serializers.SlugRelatedField(
         queryset=Workgroup.objects.all(),
+        allow_null=True,
         slug_field='title'
     )
 
     class Meta:
         model = Tag
-        fields = ['id','title', 'color', 'group']
+        fields = ['id','label', 'color', 'group']
 
-class NoteSerializer(serializers.HyperlinkedModelSerializer):
+class NoteSerializer(WritableNestedModelSerializer, serializers.HyperlinkedModelSerializer):
     group = serializers.SlugRelatedField(
         queryset=Workgroup.objects.all(),
+        allow_null=True,
         slug_field='title'
     )
 

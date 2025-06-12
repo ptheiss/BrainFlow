@@ -12,11 +12,12 @@ export const useNotesStore = defineStore('notes', {
   },
 
   actions: {
-    async initialize() {
+    async update() {
       await this.loadNotes()
     },
     // Create
     async newNote(data) {
+      console.log('newNote', data)
       return api
         .post('/notes/', data)
         .then((response) => {
@@ -59,18 +60,19 @@ export const useNotesStore = defineStore('notes', {
     },
     // Update
     async updateNote(data) {
+      console.log('updateNote', data)
       return api
-        .put('/notes/', data)
-        .then((response) => {
-          this.state.tags.push(response.data)
-        })
+        .put('/notes/' + data.id + '/', data)
         .catch(() => {
           Notify.create({
             color: 'negative',
             position: 'bottom',
-            message: 'newNote Fehler!',
+            message: 'updateNote Fehler!',
             icon: 'report_problem',
           })
+        })
+        .then(() => {
+          this.update()
         })
     },
     // Delete
@@ -80,7 +82,7 @@ export const useNotesStore = defineStore('notes', {
       }
       return api
         .delete('/notes/', data)
-        .then(this.loadFavourites())
+        .then(this.loadNotes())
         .catch(() => {
           Notify.create({
             color: 'negative',

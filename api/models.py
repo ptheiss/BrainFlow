@@ -21,12 +21,12 @@ class Tag(models.Model):
     ]
 
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=128)
+    label = models.CharField(max_length=128)
     color = models.CharField(max_length=32, choices=COLORS)
     group = models.ForeignKey(Workgroup, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
-        return self.title
+        return self.label
 
 class Setting(models.Model):
     id = models.AutoField(primary_key=True)
@@ -57,8 +57,8 @@ class Note(models.Model):
     title = models.CharField(max_length=128)
     content = models.TextField()
     group = models.ForeignKey(Workgroup, on_delete=models.SET_NULL, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
-    lastEdited = models.DateTimeField(blank=True)
+    tags = models.ManyToManyField(Tag, related_name="tags", blank=True, null=True)
+    lastEdited = models.DateTimeField(blank=True, null=True)
     lastEditor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     REQUIRED_FIELDS = ['title', 'content']
 

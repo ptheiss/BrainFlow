@@ -38,7 +38,7 @@
         <!-- Sidebar Tabs -->
         <q-tabs v-model="tab" class="primary" inline-label>
           <q-tab name="tags" icon="bookmark_border" label="" />
-          <q-tab name="favourites" icon="star_outline" label="" />
+          <!--<q-tab name="favourites" icon="star_outline" label="" />-->
           <q-tab name="recent" icon="schedule" label="" />
         </q-tabs>
 
@@ -50,36 +50,25 @@
             <!-- Tag Search Element -->
             <q-select
               outlined
+              square
               v-model="selectedTags"
-              use-input
-              hide-selected
-              fill-input
               multiple
-              stack-label
               :options="tags"
-              use-chips
+              stack-label
               label="Search tags"
-            />
-
-            <q-list separator class="noteList">
-              <q-item v-for="tag in tags" :key="tag.id" clickable>
-                <q-item-section>
-                  <q-item-label>{{ tag.title }}</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <div class="q-gutter-m text-dark">
-                    <q-btn
-                      flat
-                      dense
-                      icon="star_outline"
-                      label=""
-                      @click="users.newFavourite(tag)"
-                    />
-                  </div>
-                </q-item-section>
-              </q-item>
-            </q-list>
+              @filter="tagsFilter"
+            >
+              <template v-slot:selected-item="scope">
+                <q-chip
+                  removable
+                  @remove="scope.removeAtIndex(scope.index)"
+                  :tabindex="scope.tabindex"
+                  :color="scope.opt.color"
+                >
+                  {{ scope.opt.label }}
+                </q-chip>
+              </template>
+            </q-select>
           </q-tab-panel>
 
           <!-- Favourite Tags -->
@@ -88,7 +77,7 @@
             <q-list separator>
               <q-item v-for="tag in favourites" :key="tag.id" clickable>
                 <q-item-section>
-                  <q-item-label>{{ tag.title }}</q-item-label>
+                  <q-item-label>{{ tag.label }}</q-item-label>
                 </q-item-section>
 
                 <q-item-section side>
@@ -106,7 +95,7 @@
             <q-list separator>
               <q-item v-for="tag in recent" :key="tag.id" clickable>
                 <q-item-section>
-                  <q-item-label>{{ tag.title }}</q-item-label>
+                  <q-item-label>{{ tag.label }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -133,7 +122,11 @@ const tagStore = useTagsStore()
 const notesStore = useNotesStore()
 
 if (notesStore.getNotes.length == 0) {
-  notesStore.initialize()
+  notesStore.update()
+}
+
+if (tagStore.getTags.length == 0) {
+  tagStore.update()
 }
 
 const tags = tagStore.getTags
@@ -148,6 +141,22 @@ const selectedTags = ref([])
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+function tagsFilter(val, update) {
+  const options = ref(tags)
+
+  if (val === '') {
+    update(() => {
+      options.value = tags
+    })
+    return
+  }
+
+  update(() => {
+    const needle = val.toLowerCase()
+    options.value.label = tags.filter((v) => v.label.toLowerCase().indexOf(needle) > -1)
+  })
 }
 </script>
 

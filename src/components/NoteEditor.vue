@@ -12,20 +12,29 @@
       <q-select
         outlined
         square
-        v-model="tags"
-        use-input
-        hide-selected
-        fill-input
+        v-model="selectedTags"
         multiple
         :options="allTags"
-        use-chips
+        stack-label
         label="Tags"
-      />
+      >
+        <template v-slot:selected-item="scope">
+          <q-chip
+            removable
+            @remove="scope.removeAtIndex(scope.index)"
+            :tabindex="scope.tabindex"
+            :color="scope.opt.color"
+          >
+            {{ scope.opt.label }}
+          </q-chip>
+        </template>
+      </q-select>
+
       <q-editor v-model="content"> </q-editor>
 
       <q-toolbar>
         <q-space />
-        <q-btn flat dense icon="save" label="save" v-close-popup @click="createNote" />
+        <q-btn flat dense icon="save" label="save" v-close-popup @click="saveNote" />
       </q-toolbar>
     </q-layout>
   </q-dialog>
@@ -34,29 +43,36 @@
 <script setup>
 import { ref } from 'vue'
 import { useNotesStore } from 'src/stores/notesStore'
+import { useEditorStore } from 'src/stores/editorStore'
 import { useTagsStore } from 'src/stores/tagsStore'
-
-const props = defineProps(['title', 'content', 'tags'])
 
 // Stores
 const notesStore = useNotesStore()
+const editorStore = useEditorStore()
 const tagsStore = useTagsStore()
 
 // V-Models / Refs
-const title = ref(props.title)
-const content = ref(props.content)
-const tags = ref(props.tags)
+const id = ref(editorStore.getId)
+const title = ref(editorStore.getTitle)
+const content = ref(editorStore.getContent)
+const selectedTags = ref(editorStore.getTags)
+const group = ref(editorStore.getGroup)
 const allTags = tagsStore.getTags
 
 // Functions
-function createNote() {
+function saveNote() {
   const newNote = {
-    title: props.title,
-    content: props.content,
-    tags: props.tags,
-    group: props.group,
+    title: title.value,
+    content: content.value,
+    tags: selectedTags.value,
+    group: group.value,
   }
 
-  notesStore.newNote(newNote)
+  if (id.value != null) {
+    newNote.id = id.value
+    notesStore.updateNote(newNote)
+  } else {
+    notesStore.newNote(newNote)
+  }
 }
 </script>

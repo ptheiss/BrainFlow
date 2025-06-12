@@ -62,7 +62,7 @@ class NoteAdmin(admin.ModelAdmin):
     pass
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'color']
+    list_display = ['id', 'label', 'color', 'group']
     pass
 
 class SettingAdmin(admin.ModelAdmin):

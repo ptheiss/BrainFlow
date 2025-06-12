@@ -1,10 +1,11 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'src/boot/axios'
-import { useQuasar } from 'quasar'
+import { Notify } from 'quasar'
 
 export const useTagsStore = defineStore('tags', {
   state: () => ({
     tags: [],
+    shouldUpdate: 0,
   }),
 
   getters: {
@@ -12,15 +13,19 @@ export const useTagsStore = defineStore('tags', {
   },
 
   actions: {
+    async update() {
+      await this.loadTags()
+      this.shouldUpdate++
+    },
     // Create
     async newTag(data) {
       return api
         .post('/tags/', data)
-        .then((response) => {
-          this.state.tags.push(response.data)
+        .then(() => {
+          this.loadTags()
         })
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
             message: 'newFavourite Fehler!',
@@ -31,16 +36,19 @@ export const useTagsStore = defineStore('tags', {
 
     // Read
     async loadTags() {
+      this.tags = []
       return api
         .get('/tags/')
         .then((response) => {
-          this.state.tags.push(response.data)
+          for (let i = 0; i < response.data.length; i++) {
+            this.tags.push(response.data[i])
+          }
         })
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
-            message: 'loadFavourites Fehler!',
+            message: 'loadTags Fehler!',
             icon: 'report_problem',
           })
         })
@@ -58,7 +66,7 @@ export const useTagsStore = defineStore('tags', {
         .delete('/favourites/', data)
         .then(this.loadFavourites())
         .catch(() => {
-          useQuasar.notify({
+          Notify.create({
             color: 'negative',
             position: 'bottom',
             message: 'deleteFavourite Fehler!',

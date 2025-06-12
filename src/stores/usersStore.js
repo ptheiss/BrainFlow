@@ -10,7 +10,7 @@ export const useUsersStore = defineStore('usersStore', {
       name: 'ptheiss',
       email: 'philipp.theiss@aisys-media.de',
       password: '123456',
-      groups: {},
+      groups: [],
       favourites: [],
     },
     // tag-related properties

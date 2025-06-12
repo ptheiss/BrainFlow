@@ -9,35 +9,34 @@
       <q-select
         outlined
         stack-label
-        v-model="group"
+        v-model="selectedGroup"
         :options="groups"
         label="Filter content by group"
       />
 
-      <q-list bordered separator class="noteList">
-        <q-item v-for="note in notes" :key="note.id" clickable>
+      <q-list v-for="(note, index) in notes" :key="index" bordered separator class="noteList">
+        <q-item>
           <q-item-section>
             <q-item-label overline>{{ note.title }}</q-item-label>
-            <q-item-label lines="1">{{ note.content }}</q-item-label>
-            <q-item-label caption>
-              <q-chip v-for="tag in note.tags" :key="tag.id" :color="tag.color" group="">
-                {{ tag.title }}
+            <q-item-label lines="1">{{ cleanHtml(note.content) }}</q-item-label>
+
+            <q-item-label>
+              <q-chip v-for="tag in note.tags" :key="tag.id" :color="tag.color" :group="group">
+                {{ tag.label }}
               </q-chip>
             </q-item-label>
           </q-item-section>
-
           <q-item-section side>
             <div class="q-gutter-xs text-dark">
-              <q-btn flat dense icon="content_copy" @click="copyToClipboard(note.content)" />
+              <q-btn
+                flat
+                dense
+                icon="content_copy"
+                @click="copyToClipboard(cleanHtml(note.content))"
+              />
               <q-btn flat dense icon="edit" @click="editNote(note.id)" />
               <q-btn flat dense class="text-negative" icon="delete" @click="deleteNote(note.id)" />
             </div>
-            <NoteEditor
-              v-model="editExisting"
-              :title="note.title"
-              :content="note.content"
-              :tags="note.tags"
-            ></NoteEditor>
           </q-item-section>
         </q-item>
       </q-list>
@@ -48,50 +47,69 @@
     </div>
   </q-page>
 
-  <NoteEditor v-model="editNew" title="" content="" tags="" group=""></NoteEditor>
+  <NoteEditor
+    v-model="edit"
+    title=""
+    content=""
+    tags=""
+    group=""
+    :key="editorStore.getUpdate"
+  ></NoteEditor>
   <DeleteDialog v-model="del"></DeleteDialog>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useNotesStore } from 'src/stores/notesStore'
+import { useEditorStore } from 'src/stores/editorStore'
 import { copyToClipboard } from 'quasar'
 import NoteEditor from 'src/components/NoteEditor.vue'
 import DeleteDialog from 'src/components/DeleteDialog.vue'
+import { useUsersStore } from 'src/stores/usersStore'
 
 // Stores
 const notesStore = useNotesStore()
+const editorStore = useEditorStore()
+const usersStore = useUsersStore()
 
 // V-Models / Refs
-const notes = notesStore.getNotes
+const notes = ref(notesStore.getNotes)
 const del = ref(false)
-const editNew = ref(false)
-const editExisting = ref(false)
+const edit = ref(false)
 const group = ref([])
-const groups = []
+const selectedGroup = ref('')
+const groups = usersStore.getGroups.value
 
 // Functions
 function deleteNote(id) {
   console.log('deleteNote: ', id)
   del.value = true
 }
+
 async function refreshNotes() {
   await notesStore.loadNotes()
+  notes.value = notesStore.getNotes
   console.log('refreshNotes')
 }
 
 function newNote() {
   console.log('newNote')
-  editNew.value = true
+
+  editorStore.new()
+  edit.value = true
 }
 
 function editNote(id) {
-  const editorNote = notes.find((x) => x.id == id)
+  const editorNote = notesStore.getNotes.find((x) => x.id == id)
 
   if (editorNote != undefined) {
-    console.log('editNote', editorNote)
-    editExisting.value = true
+    editorStore.edit(editorNote)
+    edit.value = true
   }
+}
+
+function cleanHtml(string) {
+  return string.replace(/<\/?[^>]+(>|$)/g, '')
 }
 </script>
 
