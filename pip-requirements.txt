@@ -1,0 +1,7 @@
+Django
+django-cors-headers
+django-filter
+djangorestframework
+drf-writable-nested
+asgiref
+sqlparse
