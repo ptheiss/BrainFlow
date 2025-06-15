@@ -7,7 +7,11 @@ const routes = [
   {
     path: '/notes',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('src/pages/NotesPage.vue') }],
+    children: [
+      { path: '', component: () => import('src/pages/NotesPage.vue') },
+      { path: '/settings', component: () => import('src/pages/SettingsPage.vue') },
+      { path: '/groups', component: () => import('src/pages/GroupsPage.vue') },
+    ],
   },
 
   // Always leave this as last one,

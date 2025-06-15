@@ -208,3 +208,5 @@ cython_debug/
 .pypirc
 node_modules
 _docs/main.*
+*.bkp
+*.dtmp

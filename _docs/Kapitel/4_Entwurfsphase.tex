@@ -1,0 +1,58 @@
+\section {Anforderungen und Entwicklungsablauf}
+Folgende Anforderungen wurden an der Applikation festgelegt:
+    \begin{itemize}
+        \item Es soll eine Login-Funktion existieren.
+        \item Eingeloggte User sollen Notizen erstellen können.
+        \item Notizen und Sachverhalte sollen mit einem Tag-System auseinander gehalten werden.
+        \item Es soll einen Button geben, der die Inhalte einer Notiz in die Zwischenablage kopieren kann.
+    \end{itemize}
+
+\bigskip\noindent
+Früh in der Entwicklung wurde noch der Punkt hinzugenommen, dass User Applikationseinstellungen setzen können. Es war ursprünglich angedacht, dass die Tags
+eine Baumstruktur haben, da das in der Datenbank einfach modelliert werden kann, allerdings hatte in der Umsetzung das \flqq Hochklettern\frqq des Baumes in der Darstellung
+Probleme bereitet. Als Ersatz wurden Arbeitsgruppen in die Spezifikation dazugenommen, denen sowohl Tags als auch User angehören können.
+
+\bigskip\noindent
+Zur Visualisierung wurden ein \hyperref[usecase]{Use Case Diagramm} und ein \hyperref[mockup]{Mockup} erstellt.
+
+\bigskip\noindent
+Die Zielplattform von BrainFlow sind Desktop-Computer und Notebooks. Zur Implementierung der Full-Stack Applikation hat sich der Auszubildende entschieden
+das Frontendframework Quasar in Tandem mit dem Backendframework Django zu verwenden. Ursprünglich wurde für das Frontend nur Vue.js ausgewählt, da der Auszubildende hiermit
+Vorerfahrungen hatte, allerdings stellt Vue von sich aus keine UI-Komponenten zur Verfügung.
+
+\bigskip\noindent
+Da die Entwicklung eigener Komponenten einen sehr hohen Zeitaufwand mit sich bringt, musste man sich kurz nach Projektangang doch für eine Erweiterung entscheiden.
+Hier wurde erwägt zwischen Vuetify, eine Bibliothek für Vue.js, oder ein anderes Framework zu benutzen. Am Ende konnte sich Quasar, welches ebenso auf Vue.js basiert,
+durchsetzen aufgrund der \flqq What You See Is What You Get\frqq-Editor Komponente, welche als Basis für die Notiz-Funktion dient.
+
+\subsection{Frontend}
+Quasar basiert auf Vue.js, welches sich durch die Nutzung von Single File Components auszeichnet. Diese stellen sich zusammen aus einer Template Sektion (Vue + HTML),
+Script Sektion (JavaScript) und Style Sektion (CSS). SFCs werden für alle Web Design Aspekte von Vue.js verwendet (UI-Element, Toolbars, ganze Webpages) und können in
+den Template-Bereich anderer SFCs importiert werden.
+
+\bigskip\noindent
+Die Benutzeroberfläche wurde in folgende Abschnitte geteilt:
+\begin{itemize}
+    \item Login-Seite
+    \item Hauptmenü
+    \item Optionsmenü
+    \item Gruppenmenü
+    \item Notizeditor
+\end{itemize}
+
+\bigskip\noindent
+Die Bedienung der Oberfläche erfolgt mit Maus und Tastatur State Management wird von Pinia, einem Plugin für Vue, übernommen.
+Ein Pinia Store muss nur ein mal definiert werden um den State für alle Pages und Komponents, wo der Store angesprochen wird, verfügbar zu machen.
+
+\bigskip\noindent
+In Quasar müssen alle Routen in src/router/routes.js angelegt werden, diese werden als JSON-Objekt Array mit den Attributen path, component und children definiert.
+Path bezeichnet den URL-Pfad, Component die Vue Komponente, die angezeigt werden soll, und Children können weitere Routen beinhalten die einen Subpfad darstellen.
+        
+\subsection{Backend}
+    Für das Backend wurde das Python-basierte Framework Django benutzt, da der Auszubildende auch hiermit Vorerfahrungen hatte. Django stellt wichtige Funktionen
+    wie Nutzeraccounts, Passwort-Hashing und eine Oberfläche zum Verwalten der Datenbank zur Verfügung, welche auch aus Vorerfahrung massive Vorteile für das
+    Kontrollieren von API Calls und das Einspielen von Beispieldaten mit sich brachte.
+
+    \bigskip\noindent
+    Das Projekt sollte auf einen Live-Server mit einer MariaDB-Datenbank migriert werden, allerdings fehlte nach Entwicklung der Basisfunktionen des Frontends und
+    mehreren notwendigen Korrekturen am Datenbankmodell die Zeit hierfür. BrainFlow verwendet die von Django standardmäßig zur Verfügung gestellte SQLite Datenbank.

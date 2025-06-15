@@ -7,8 +7,8 @@ export const useUsersStore = defineStore('usersStore', {
     // Logged-in user's data
     user: {
       id: 1,
-      name: 'ptheiss',
-      email: 'philipp.theiss@aisys-media.de',
+      name: 'admin',
+      email: 'admin@brainflow.aisys-media.com',
       password: '123456',
       groups: [],
       favourites: [],

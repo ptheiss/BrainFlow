@@ -57,7 +57,7 @@ class Note(models.Model):
     title = models.CharField(max_length=128)
     content = models.TextField()
     group = models.ForeignKey(Workgroup, on_delete=models.SET_NULL, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name="tags", blank=True, null=True)
+    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
     lastEdited = models.DateTimeField(blank=True, null=True)
     lastEditor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     REQUIRED_FIELDS = ['title', 'content']

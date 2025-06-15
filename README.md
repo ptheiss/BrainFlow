@@ -3,38 +3,41 @@
 Online note-taking application
 
 ## Install the dependencies
+
+### Quasar
+
 ```bash
 yarn
 # or
 npm install
+# then
+npm i -g @quasar/cli
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Django
+
+- Install [Python](https://www.python.org/downloads/)
+- Run `pip install -r pip-requirements.txt` to install required Django packages
+
+## Start the app in development mode (hot-code reloading, error reporting, etc.)
+
 ```bash
+# First run Django backend
+python manage.py makemigrations api
+python manage.py migrate --run-syncdb
+python manage.py loaddata ./api/fixtures/db.json
+python manage.py runserver
+
+# Then launch Quasar dev environment
 quasar dev
 ```
 
+## URLs
 
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
+Backend: http://localhost:8000 \
+Frontend: http://localhost:9000
 
+## Backend admin credentials
 
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+Username: admin\
+Password: 123456

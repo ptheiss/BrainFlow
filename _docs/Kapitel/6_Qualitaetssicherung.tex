@@ -1,0 +1,32 @@
+Da der Auszubildende das einzige Teammitglied am Projekt ist, war ein Code Review nur sporadisch möglich. Stattdessen hat man sich entschieden bei der Aufsetzung
+des Quasar-Projekts, die angebotenen Code Formatter und Linter mitzuinstallieren (Prettier + ESLint). Dies gewährleistet, dass der geschriebene Code sich beim
+Speichern automatisch gewissen Style Richtlinien anpasst. Der Development Server gibt zur selben Zeit gefundene Fehler im Code in der Konsole aus, was die
+Frontendentwicklung sehr unanfällig gegenüber Fehlern gestaltet hat.
+
+\bigskip\noindent
+Da ein sehr großer Teil der Komplexität des Projekts von der Implementierung der API zusammenhängt, wurde grundsätzlich entschieden einen Unit Test
+auf Seiten des Backends zu schreiben, der überprüft, ob die API-Anbindung erfolgreich war, indem er CRUD-Operationen an die API schickt.
+
+\subsection*{brainFlowTestCase(TestCase)}
+Beim Aufsetzen einer Django Applikation wird eine tests.py erstellt.
+In dieser tests.py können wir unsere Tests als Klasse implementieren. Mit \flqq python manage.py test\frqq werden alle Funktionen durchgeführt, die mit \flqq test \frqq beginnen.
+Da Django von unabhängigen Unit Tests ausgeht, ist die Reihenfolge der Ausführung dieser Tests zufällig gewählt. Da unser Test jedoch von der Reihenfolge der Operationen
+abhängig ist, mussten sie in denselben Test gepackt werden.
+
+\bigskip\noindent
+Unser Test durchläuft folgende Schritte:
+    \begin{itemize}
+        \item Es wird eine Notiz in der Datenbank erstellt.
+        \item Diese Notiz wird aus der Datenbank gelesen.
+        \item Dann wird die Notiz geändert.
+        \item Schließlich wird die Notiz gelöscht.
+    \end{itemize}
+
+\bigskip\noindent
+Django REST Framework stellt ein APIRequestFactory Objekt zur Verfügung, dass das Erstellen von Requests an die API-URLs vereinfacht.
+Mit der APIRequestFactory wird auch das NoteViewSet von api.views importiert, da wir anhand dieser Tabelle testen.
+
+\bigskip\noindent
+Für das Testen legt Django eine temporäre Testdatenbank an, damit bestehende Daten nicht verfälscht oder gelöscht werden. Alternativ kann man eine
+sogenannte \flqq Fixture\frqq verwenden. Fixtures sind prinzipiell Datenbankexports, mit denen man über das manage.py script Daten exportieren oder
+importieren kann. Wenn Fixture-Dateien in einem Django Test definiert sind, dann werden diese beim Ausführen des Tests in die Test-Datenbank geladen.

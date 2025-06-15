@@ -1,7 +1,0 @@
-Vue + Django
-unit testing mit vitest
-
-Requirements:
-Python 3
-    mit
-    pip -r requirements.txt installieren
